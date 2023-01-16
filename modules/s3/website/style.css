@@ -23,6 +23,10 @@ body {
   background-color: black;
 }
 
+.cell.alive {
+  background-color: blue;
+}
+
 .cell:hover {
   background-color: red;
 }
