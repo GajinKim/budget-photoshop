@@ -21,5 +21,10 @@ module "s3" {
 }
 
 module "rds" {
-  source = "./modules/rds"
+  source                    = "./modules/rds"
+  mysql_security_group_id = module.security.mysql_security_group_id
+}
+
+module "security" {
+  source = "./modules/security"
 }
