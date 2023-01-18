@@ -30,5 +30,6 @@ module "security" {
 }
 
 module "ec2" {
-  source = "./modules/ec2"
+  source                    = "./modules/ec2"
+  website_security_group_id = module.security.website_security_group_id
 }
