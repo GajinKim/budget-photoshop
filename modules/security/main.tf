@@ -43,6 +43,15 @@ resource "aws_security_group" "website_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    # https port allowed from any ip
+    description = "http"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     description      = "all-open"
     from_port        = 0
@@ -60,5 +69,5 @@ resource "aws_security_group" "website_security_group" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  
+
 }
