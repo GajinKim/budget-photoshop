@@ -1,14 +1,14 @@
-#! /bin/bash
+# #! /bin/bash
 
-set -e
+# sudo su
+# apt-get update
+# apt-get install nginx -y
+# git clone https://github.com/GajinKim/conways-game-of-life.git
 
-IMAGE_TAG="$GITHUB_SHA"
-IMAGE_ARN=$1
-
-aws ecr get-login-password --region < AWS-REGION > | docker login --username AWS --password-stdin < YOUR-ECR-URI >
-
-docker build -t < DOCKER-IMAGE-NAME >:$IMAGE_TAG .
-
-docker tag < DOCKER-IMAGE-NAME >:$IMAGE_TAG $IMAGE_ARN:$IMAGE_TAG
-
-docker push $IMAGE_ARN:$IMAGE_TAG
+# sudo apt install curl
+# curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+# sudo apt-get install nodejs -y
+# cd conways-game-of-life/app/
+# npm install
+# cd ../../../
+# cd etc/nginx/sites-available/
