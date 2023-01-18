@@ -52,6 +52,15 @@ resource "aws_security_group" "website_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    # svelte localhost port allowed from any ip
+    description = "http"
+    from_port   = 5173
+    to_port     = 5173
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     description      = "all-open"
     from_port        = 0
