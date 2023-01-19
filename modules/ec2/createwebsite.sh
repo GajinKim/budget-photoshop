@@ -11,7 +11,7 @@ sudo apt-get install -y nodejs
 cd /var/www/html/
 sudo git clone https://github.com/GajinKim/chat-app.git
 echo "Finished cloning chat app"
-cd /chat-app/app
+cd chat-app/app/
 sudo npm i
 echo "Finished installing package dependencies"
 sudo npm run build
