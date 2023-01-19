@@ -22,7 +22,7 @@ sudo apt-get install -y nodejs
 # npm -v
 
 cd /var/www/html/
-git clone https://github.com/GajinKim/conways-game-of-life.git
+git clone https://github.com/GajinKim/chat-app.git
 cd /conways-game-of-life/app
 sudo npm i
 node ./build/index.js # https://stackoverflow.com/questions/70398935/how-to-deploy-a-svelte-kit-app-after-build-using-nginx-as-web-server/70571992

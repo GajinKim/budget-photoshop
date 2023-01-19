@@ -45,6 +45,6 @@ resource "aws_instance" "website" {
 
   tags = {
     Owner = "Gajin"
-    Name  = "Gajins EC2 Conways Game of Life Website" // how you specify name of EC2 instance
+    Name  = "Basic EC2 Chat Demo App" // how you specify name of EC2 instance
   }
 }
