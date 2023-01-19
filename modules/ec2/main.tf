@@ -29,7 +29,10 @@ resource "aws_instance" "website" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [var.website_security_group_id]
   key_name               = "GajinsKey"
-  user_data              = file("${path.module}/createwebsite.sh") # script runs whenever the EC2 Instance is launched
+  user_data              = file("${path.module}/createwebsite.sh") # script runs whenever the EC2 Instance is launched\
+
+  # last part of script to deploy app on server
+   # https://stackoverflow.com/questions/70398935/how-to-deploy-a-svelte-kit-app-after-build-using-nginx-as-web-server/70571992 
 
   # attaching storage (EBS)
   ebs_block_device {
