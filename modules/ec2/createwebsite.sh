@@ -1,23 +1,28 @@
 # #! /bin/bash
 
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
+
+# installing nginx creates our /var/www/html
 sudo apt-get install nginx -y
 
 nginx -v
-
-# create our folders
-sudo systemctl restart nginx
-
 cd /var/www/html/
+ls
 cd /
 
 sudo systemctl reload nginx
 
-cd /var/www/html/
-# git clone https://github.com/GajinKim/conways-game-of-life.git
+# install npm
+sudo apt-get install curl
+curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash
+sudo apt-get install -y nodejs
 
-# just for testing
-npx create-react-app react-tutorial
-cd react-tutorial
-npm start
+node -v
+npm -v
+
+cd /var/www/html/
+git clone https://github.com/GajinKim/conways-game-of-life.git
+cd /conways-game-of-life/app
+sudo npm i
+node ./build/index.js # https://stackoverflow.com/questions/70398935/how-to-deploy-a-svelte-kit-app-after-build-using-nginx-as-web-server/70571992
