@@ -1,23 +1,104 @@
 <script>
-	/**
-	 * @type {{ todos: any; }}
-	 */
-	 export let data;
+// @ts-nocheck
+	const canvasRows = 25;
+	const canvasColumns = 25;
+	let colorPalette = [
+		{color: "red", selected: true}, 
+		{color: "green", selected: false}, 
+		{color: "blue", selected: false}, 
+		{color: "black", selected: false}
+	];
+	let brushColor = "red";
+
+	/** @type {string[][]}*/
+	let canvas = [];
+	
+	for (let row = 0; row < canvasRows; row++) {
+		canvas[row] = [];
+		for (let column = 0; column < canvasColumns; column++) {
+			canvas[row][column] = "black";
+		}
+	}
+
+	function updatePixel(row, column) {
+		canvas[row][column] = brushColor;
+	}
+
+	function updateBrushColor(color) {
+		brushColor = color;
+		colorPalette.forEach((paint) => {
+			paint.selected = false;
+			if (paint.color === color) {
+				paint.selected = true;
+			}
+		});
+		colorPalette = colorPalette;
+	}
+
 </script>
 
-<h1>Home Page</h1>
+<main>
+	<h1>Budget Photoshop</h1>
+	<br>
+	<table class="canvas">
+		{#each canvas as row, rowIndex}
+		<tr>
+			{#each row as pixel, columnIndex}
+			<td on:click={() => updatePixel(rowIndex, columnIndex)} class="pixel {canvas[rowIndex][columnIndex]}">
+			</td>
+			{/each}
+		</tr>
+		{/each}
+	</table>
+	<br>
+	<h2>Color Palette</h2>
+	<table class="color palette">
+		<tr>
+			{#each colorPalette as {color, selected} (color)}
+				{#if selected}
+					<td on:click={() => updateBrushColor(color)} class="paint {color}">★</td>
+				{:else}
+					<td on:click={() => updateBrushColor(color)} class="paint {color}"></td>
+				{/if}
+			{/each}
+		</tr>
+	</table>
+</main>
 
-<form method="POST">
-	<label>
-		<h2>Add item to <u>todo</u> list:</h2>
-		<input name="description" />
-	</label>
-</form>
+<style>
+	h1, h2{
+		text-align: center;
+	}
 
-<ul>
-	{#each data.todos as todo (todo.id)}
-		<li class="todo">
-			{todo.description}
-		</li>
-	{/each}
-</ul>
+	.canvas, .color.palette {
+		margin-left:auto; 
+		margin-right:auto;
+		text-align: center;
+		color: white;
+		background-color: rebeccapurple;
+	}
+	
+	.pixel, .paint {
+		width: 25px;
+		height: 25px;
+	}
+
+	.paint {
+		width: 125px;
+	}
+	.pixel.red, .paint.red {
+		background-color: red;
+	}
+	.pixel.green, .paint.green {
+		background-color: green;
+	}
+	.pixel.blue, .paint.blue {
+		background-color: blue;
+	}
+	.pixel.black, .paint.black {
+		background-color: black;
+	}
+	.pixel:hover {
+		opacity: 50%;
+	}
+</style>
