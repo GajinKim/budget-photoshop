@@ -7,6 +7,8 @@ terraform {
   }
 
   required_version = ">= 1.2.0"
+
+  # todo - setup remote state bucket
 }
 
 # Configure aws provider
