@@ -34,4 +34,5 @@ module "security" {
 module "ec2" {
   source                    = "./modules/ec2"
   website_security_group_id = module.security.website_security_group_id
+  website_vpc_id            = "vpc-069e098acf6c79986"
 }

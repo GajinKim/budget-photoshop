@@ -55,14 +55,14 @@ resource "aws_security_group" "website_security_group" {
   ingress {
     # svelte localhost port allowed from any ip
     description = "svelte"
-    from_port   = 5173
-    to_port     = 5173
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    # react localhost port allowed from any ip
+    # localhost port allowed from any ip
     description = "svelte"
     from_port   = 3000
     to_port     = 3000
