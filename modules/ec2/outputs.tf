@@ -1,5 +1,5 @@
 output "website_public_ip" {
-  value = aws_instance.website.public_ip
+  value = format("%s/%s",aws_instance.website.public_ip,":3000")
 }
 
 output "website_public_dns" {

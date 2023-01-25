@@ -37,6 +37,9 @@ resource "aws_instance" "website" {
   key_name               = "GajinsKey"
   user_data              = file("${path.module}/createwebsite.sh") # script runs whenever the EC2 Instance is launched
 
+  disable_api_stop        = false # turn this turn TODO
+  disable_api_termination = false
+
   # attaching storage (EBS)
   ebs_block_device {
     device_name           = "/dev/xvda"
@@ -45,7 +48,18 @@ resource "aws_instance" "website" {
     delete_on_termination = true
 
     tags = {
-      Owner = "Gajin"
+      Owner = "Gajin A"
+    }
+  }
+
+  ebs_block_device {
+    device_name           = "/dev/xvdb"
+    volume_size           = 8
+    volume_type           = "gp2"
+    delete_on_termination = true
+
+    tags = {
+      Owner = "Gajin B"
     }
   }
 
@@ -59,13 +73,11 @@ resource "aws_instance" "website_instance_1" {
   ami                    = data.aws_ami.amazon-linux-2.id
   instance_type          = "t3.micro"
   vpc_security_group_ids = [var.website_security_group_id]
-  # subnet_id              = aws_subnet.private1a.id
-  user_data = file("${path.module}/createwebsite_lb1.sh")
-  # availability_zone      = "us-east-1a"
+  user_data              = file("${path.module}/createwebsite_lb1.sh")
 
   tags = {
     Owner = "Gajin"
-    Name  = "EC2 ELB Demo Instance 1" // how you specify name of EC2 instance
+    Name  = "EC2 ELB Demo Instance 1"
   }
 }
 
@@ -77,7 +89,7 @@ resource "aws_instance" "website_instance_2" {
 
   tags = {
     Owner = "Gajin"
-    Name  = "EC2 ELB Demo Instance 2" // how you specify name of EC2 instance
+    Name  = "EC2 ELB Demo Instance 2"
   }
 }
 
@@ -89,7 +101,7 @@ resource "aws_instance" "website_instance_3" {
 
   tags = {
     Owner = "Gajin"
-    Name  = "EC2 ELB Demo Instance 2" // how you specify name of EC2 instance
+    Name  = "EC2 ELB Demo Instance 3"
   }
 }
 
@@ -137,7 +149,8 @@ resource "aws_lb" "website_application_lb" {
   subnets            = [aws_subnet.private1a.id, aws_subnet.private1b.id, aws_subnet.private1c.id]
 }
 
-# first 24 bits are reserved
+# first 24 bits are reserved (network bits)
+# remaining 8 bits are part of the host bits
 resource "aws_subnet" "private1a" {
   vpc_id            = var.website_vpc_id
   cidr_block        = "172.31.200.0/24"
@@ -154,4 +167,54 @@ resource "aws_subnet" "private1c" {
   vpc_id            = var.website_vpc_id
   cidr_block        = "172.31.202.0/24"
   availability_zone = "us-east-1c"
+}
+
+
+
+resource "aws_autoscaling_group" "example_autoscaling_group" {
+  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  desired_capacity   = 2
+  max_size           = 3
+  min_size           = 2
+
+  launch_template {
+    id      = aws_launch_template.example_launch_template.id
+    version = "$Latest"
+  }
+}
+
+// apparently AWS no longer supports aws_launch_configurations, so start using launch_template instead
+# resource "aws_launch_configuration" "example_launch_configuration" {
+#   name          = "example_launch_configuration"
+#   image_id      = data.aws_ami.amazon-linux-2.id
+#   instance_type = "t3.micro"
+#   user_data     = file("${path.module}/createwebsite_lb_asg.sh")
+# }
+
+resource "aws_launch_template" "example_launch_template" {
+  name          = "example_launch_template"
+  image_id      = data.aws_ami.amazon-linux-2.id
+  instance_type = "t3.micro"
+  user_data     = filebase64("${path.module}/createwebsite_lb_asg.sh")
+
+  # initial placement
+  # placement {
+  #   availability_zone = "us-east-1a"
+  # }
+
+  vpc_security_group_ids = [var.website_security_group_id]
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "Launched from Autoscaling Group"
+    }
+  }
+}
+
+# how you connect the load balancer to the auto scaling group
+resource "aws_autoscaling_attachment" "asg_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.example_autoscaling_group.id
+  lb_target_group_arn    = aws_lb_target_group.website_tg.arn
 }
