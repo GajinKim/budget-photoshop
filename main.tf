@@ -8,7 +8,12 @@ terraform {
 
   required_version = ">= 1.2.0"
 
-  # todo - setup remote state bucket
+  # remote state bucket
+    backend "s3" {
+    bucket = "gajin-tf-state-bucket"
+    key    = "gajin-terraform-ec2-in-depth-exercise"
+    region = "us-east-1"
+  }
 }
 
 # Configure aws provider
@@ -34,5 +39,5 @@ module "security" {
 module "ec2" {
   source                    = "./modules/ec2"
   website_security_group_id = module.security.website_security_group_id
-  website_vpc_id            = "vpc-069e098acf6c79986"
+  website_vpc_id            = var.default_vpc_id
 }
